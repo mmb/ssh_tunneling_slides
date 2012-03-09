@@ -1,0 +1,130 @@
+\documentclass{beamer}
+
+\begin{document}
+\title{SSH Tunneling}
+\author{Matthew M. Boedicker}
+\date{\today}
+
+\frame{\titlepage}
+
+\frame{\frametitle{Introduction}
+
+When you ssh to a server you are creating a secure channel on an insecure
+network. This channel can be used for more than a remote shell. A tunnel
+proxies any kind of traffic through this secure channel.
+
+}
+
+\frame{\frametitle{-L tunnels}
+
+\begin{itemize}
+
+\item listens on local side, forwards traffic through tunnel, it continues to
+its destination from remote side
+
+\end{itemize}
+
+\begin{exampleblock}{Example}
+\texttt{ssh -L localhost:9978:host-a:80 host-b}
+\end{exampleblock}
+
+Traffic to localhost port 9978 will go through the tunnel to host-b then
+continue on to host-a port 80.
+
+}
+
+\frame{\frametitle{-R tunnels}
+
+\begin{itemize}
+
+\item listens on remote side, forwards traffic back through tunnel, it
+continues to its destination from local side
+
+\end{itemize}
+
+\begin{exampleblock}{Example}
+\texttt{ssh -R :9978:host-a:80 host-b}
+\end{exampleblock}
+
+Traffic to host-b port 9978 will come back through the tunnel to the local
+host and then continue to host-a port 80.
+
+}
+
+\frame{\frametitle{-D tunnels}
+
+\begin{itemize}
+
+\item creates a local SOCKS5 proxy that sends traffic through the tunnel
+where it continues to its destination from the remote side.
+
+\item many applications and OSs support SOCKS5
+
+\end{itemize}
+
+\begin{exampleblock}{Example}
+\texttt{ssh -D localhost:9978 host-a}
+\end{exampleblock}
+
+Applications using the SOCKS5 proxy on localhost port 9978 will have their
+traffic send through the tunnel to host-a where it will continue on to
+its destination.
+
+}
+
+\frame{\frametitle{Potential Uses}
+
+\begin{itemize}
+
+\item hide your traffic from the local network (workplace, government, school,
+hackers at Starbucks)
+
+\item bypass firewalls, NAT and content filters
+
+\item connect to internal web servers and other resources from outside the
+network
+
+\item connect networks that don't route to each other
+
+\item secure unencrypted traffic in untrusted environments (instant message,
+non-SSL sites, mail)
+
+\item hide your location from web sites (browsing competitor's site from
+work)
+
+\item test if something is accessible from a network other than the one
+you are on
+
+\end{itemize}
+
+}
+
+\frame{\frametitle{Tools}
+
+\begin{itemize}
+
+\item internet-connected server (at home or VPS)
+
+\item OpenSSH, putty (windows)
+
+\item FoxyProxy (FireFox add-on)
+
+\end{itemize}
+
+}
+
+\frame{\frametitle{Caution}
+
+\begin{itemize}
+
+\item usually only listen on local interfaces, tunnels listening on a public
+interface could allow access to sensitive private networks
+
+\item don't forget to use remote DNS or your DNS queries will stay on the
+local network and leak information about your traffic
+
+\end{itemize}
+
+}
+
+\end{document}
